@@ -40,8 +40,7 @@
    if (n === 0) {
       return [];
     } else if (n === undefined) {
-      var long = array.length;
-        return array[long-1];
+        return array[array.length-1];
       } else {
         return array.slice(-n);
       };
