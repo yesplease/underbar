@@ -137,7 +137,7 @@
       }
     return results;   
     };
-    
+
   /*
    * TIP: map is really handy when you want to transform an array of
    * values into a new array of values. _.pluck() is solved for you
@@ -177,7 +177,31 @@
   //   }); // should be 5, regardless of the iterator function passed in
   //          No accumulator is given so the first element is used.
   _.reduce = function(collection, iterator, accumulator) {
+   if (accumulator !== undefined){ 
+    for (var i = 0; i < collection.length; i++){
+      var result = iterator(accumulator, collection[i]);
+      return result;
+      }
+    } else {
+      for (var i = 1; i < collection.length; i++) {
+        var result = iterator(accumulator, collection[i]);
+        return result;
+      }
+    }
   };
+   // if (accumulator !== undefined){
+   //  for (var i = 0; i < collection.length; i++){
+   //    iterator(collection[i]);
+   //    }
+   //  } else {
+   //  for (var i = 1; i < collection.length; i++){
+   //        iterator(collection[i]);
+   //        }
+   //  };
+  
+
+
+
 
   // Determine if the array or object contains a given value (using `===`).
   _.contains = function(collection, target) {
