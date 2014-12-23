@@ -176,37 +176,21 @@
   //     return total + number * number;
   //   }); // should be 5, regardless of the iterator function passed in
   //          No accumulator is given so the first element is used.
-  _.reduce = function(collection, iterator, accumulator) {
-   var result;
-   var accumulator;
+
+    _.reduce = function(collection, iterator, accumulator) {
    if (accumulator !== undefined){ 
     for (var i = 0; i < collection.length; i++){
       accumulator = iterator(accumulator, collection[i]); 
-      console.log(accumulator); //every time we are completely rewriting that variable
       }
     } else {
         accumulator = collection[0];
       for (var i = 1; i < collection.length; i++) {
 
         accumulator = iterator(accumulator, collection[i]);
-              console.log(accumulator);
       }
     };
     return accumulator;
   };
-   // if (accumulator !== undefined){
-   //  for (var i = 0; i < collection.length; i++){
-   //    iterator(collection[i]);
-   //    }
-   //  } else {
-   //  for (var i = 1; i < collection.length; i++){
-   //        iterator(collection[i]);
-   //        }
-   //  };
-  
-
-
-
 
   // Determine if the array or object contains a given value (using `===`).
   _.contains = function(collection, target) {
