@@ -184,6 +184,7 @@
       }
     } else {
       for (var i = 1; i < collection.length; i++) {
+        accumulator = collection[0];
         var result = iterator(accumulator, collection[i]);
         return result;
       }
