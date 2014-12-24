@@ -176,21 +176,52 @@
   //     return total + number * number;
   //   }); // should be 5, regardless of the iterator function passed in
   //          No accumulator is given so the first element is used.
+// //working code:
+//     _.reduce = function(collection, iterator, accumulator) {
+//    if (accumulator !== undefined){ 
+//     for (var i = 0; i < collection.length; i++){
+//       accumulator = iterator(accumulator, collection[i]); 
+//       }
+//     } else {
+//         accumulator = collection[0];
+//       for (var i = 1; i < collection.length; i++) {
 
-    _.reduce = function(collection, iterator, accumulator) {
-   if (accumulator !== undefined){ 
-    for (var i = 0; i < collection.length; i++){
-      accumulator = iterator(accumulator, collection[i]); 
-      }
-    } else {
-        accumulator = collection[0];
-      for (var i = 1; i < collection.length; i++) {
+//         accumulator = iterator(accumulator, collection[i]);
+//       }
+//     };
+//     return accumulator;
+//   };
+//end working code
 
-        accumulator = iterator(accumulator, collection[i]);
-      }
-    };
-    return accumulator;
-  };
+//almost working 2nd pass:
+  //   _.reduce = function(collection, iterator, accumulator) {
+  //  if (accumulator !== undefined){ 
+  //      _.each(collection, function(value, i, collection) {
+  //       accumulator = iterator(accumulator, collection[i]);
+  //         });
+  //   } else {
+  //       accumulator = collection[0];
+  //       _.each(collection, function(value, i, collection) {
+  //       accumulator = iterator(accumulator, collection[i]);
+  //         });
+  //   };
+  //   return accumulator;
+  // };
+  //
+
+   _.reduce = function(collection, iterator, accumulator) {
+   _.each(collection, function(value, i, collection) {
+       if (accumulator !== undefined) { 
+            accumulator = iterator(accumulator, value);
+        } else {
+            accumulator = collection[0];
+        }
+
+      });
+        return accumulator;
+ };
+
+
 
   // Determine if the array or object contains a given value (using `===`).
   _.contains = function(collection, target) {
