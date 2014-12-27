@@ -51,7 +51,7 @@
   // Accepts both arrays and objects.
   //
   // Note: _.each does not have a return value, but rather simply runs the
-  // iterator function over each item in the input collection.
+  // iterator function over each item in the input collection. Your iterator CAN have a return value though!!
   _.each = function(collection, iterator) {
     if (Array.isArray(collection)){
       for (var i = 0; i < collection.length; i++) {
@@ -211,17 +211,7 @@
    //  };
 
 
-  // _.each = function(collection, iterator) {
-  //   if (Array.isArray(collection)){
-  //     for (var i = 0; i < collection.length; i++) {
-  //       iterator(collection[i], i, collection);
-  //       }
-  //     } else {
-  //       for (var prop in collection) {
-  //         iterator(collection[prop], prop, collection);
-  //       }
-  //     }
-  // };
+
 
   // Determine if the array or object contains a given value (using `===`).
   // code as given:
@@ -242,6 +232,7 @@
    // console.log("---------------------------");
     return _.reduce(collection, function(wasFound, item) {
      // console.log("wasFound equals here " + wasFound);
+    // console.log("wasfound is a " + typeof wasFound);
       if (wasFound) {
         return true;
       }
@@ -278,47 +269,45 @@
   // };
 
   // Determine whether all of the elements match a truth test.
-  _.every = function(collection, iterator) {
-    if (collection == null && collection.length == null) {
-      return true} else if (_.reduce(collection,iterator)) {
-      return true;
-    }
-      return false;
-    
+  _.every = function(collection, truthyTest){
+    //If the truthy test is not defined, we need to set it -- why does this not say var or function?
+    var truthyTest = truthyTest || _.identity;
 
-    //if (collection != null && collection.results != null && collection.results.size != 0) {
-      //if (_.reduce(collection, iterator)) {return true}; 
-      //retrun false;}; 
-      //else {return true};
-   
+    //Next, set a boolean variable for whether the test passes or not. Let's assume all tests pass by default. -- could we have set this
+    //in the function definition of _.reduce()?
+    var passed = true;
 
-    //if, when i iterate on every item of a colleciton, it passes a truth test, then return true.
-    //if it fails the truth test even once, return false.
+    //Loop through the collection
+    _.each(collection, function(elem){
+      //where does elem come from? from each itself? It pulls something out of the collection itself (as defined in each)?
+      //What if we wanted to pull the index out of the collection?
 
-    // TIP: Try re-using reduce() here.
+      if(!truthyTest(elem)){
+        passed = false;
+      //This part makes sense. If the test ever fails, just set passed to equal false.
+      }
+    });
+    return passed;
   };
 
 
-  //Determine whether all of the elements match a truth test.
-  // First shot:
-  // _.every = function(collection, iterator) {
-  //   console.log("We are passed in this " + collection);
-  //   return _.reduce(collection, function(didItPass, item){
-  //     if (didItPass){
-  //       return iterator(item);
-  //     }
-  //   return false;
-  //   }, false);
-  // };
-    // TIP: Try re-using reduce() here.
+
 
 
   // Determine whether any of the elements pass a truth test. If no iterator is
   // provided, provide a default one
   _.some = function(collection, iterator) {
-    // TIP: There's a very clever way to re-use every() here.
-  };
+    var iterator = iterator || _.identity;
 
+    var passed = false;
+
+    _.each(collection, function(elem){
+      if (iterator(elem)) {
+        passed = true;
+      }
+    });
+    return passed;
+    };
 
   /**
    * OBJECTS
