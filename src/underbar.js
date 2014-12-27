@@ -1,4 +1,4 @@
-(function() {
+(function () {
   'use strict';
 
   window._ = {};
@@ -83,13 +83,14 @@
 
   // Return all elements of an array that pass a truth test.
   _.filter = function(collection, test) {
-    var result = [];
-    _.each(collection, function(value, i, collecion){
-      if (test(value) === true) {
-       result.push(collection[i]);  
-    }
-  });
-    return result;
+    var resultArray = [];
+    _.each(collection, function(currentElement){
+      if (test(currentElement) === true) {
+       // old: result.push(collection[i]);  
+       resultArray.push(currentElement);
+      }
+    });
+    return resultArray;
   };
 
 
@@ -99,9 +100,9 @@
     // copying code in and modifying it
    var passed = _.filter(collection, test);
    var answer = [];
-   _.each(collection, function(value, i, collection) {
-      if (_.indexOf(passed, value) === -1) {
-        answer.push(value);
+   _.each(collection, function(valueWithinCollection) {
+      if (_.indexOf(passed, valueWithinCollection) === -1) {
+        answer.push(valueWithinCollection);
       }
     });
    return answer;
@@ -110,9 +111,9 @@
   // Produce a duplicate-free version of the array.
   _.uniq = function(array) {
     var alone = [];
-    _.each(array, function(value, i, collection){
-      if (_.indexOf(alone, value) === -1){
-        alone.push(value);
+    _.each(array, function(currentValue){
+      if (_.indexOf(alone, currentValue) === -1){
+        alone.push(currentValue);
       }
 
     });
@@ -152,6 +153,7 @@
     // values into a new array of values. _.pluck() is solved for you
     // as an example of this.
     return _.map(collection, function(item){
+      var result = item[key];
       return item[key];
     });
   };
@@ -176,70 +178,140 @@
   //     return total + number * number;
   //   }); // should be 5, regardless of the iterator function passed in
   //          No accumulator is given so the first element is used.
-// //working code:
-//     _.reduce = function(collection, iterator, accumulator) {
-//    if (accumulator !== undefined){ 
-//     for (var i = 0; i < collection.length; i++){
-//       accumulator = iterator(accumulator, collection[i]); 
-//       }
-//     } else {
-//         accumulator = collection[0];
-//       for (var i = 1; i < collection.length; i++) {
 
-//         accumulator = iterator(accumulator, collection[i]);
-//       }
-//     };
-//     return accumulator;
-//   };
-//end working code
 
-//almost working 2nd pass:
-  //   _.reduce = function(collection, iterator, accumulator) {
-  //  if (accumulator !== undefined){ 
-  //      _.each(collection, function(value, i, collection) {
-  //       accumulator = iterator(accumulator, collection[i]);
-  //         });
-  //   } else {
-  //       accumulator = collection[0];
-  //       _.each(collection, function(value, i, collection) {
-  //       accumulator = iterator(accumulator, collection[i]);
-  //         });
-  //   };
-  //   return accumulator;
+    //working code::
+   _.reduce = function(collection, iterator, resultOrStatus) {
+     _.each(collection, function(value, i, collection) {
+         if (resultOrStatus !== undefined) {
+              resultOrStatus = iterator(resultOrStatus, value);
+          } else {
+              resultOrStatus = collection[0];
+          }
+        });
+        return resultOrStatus;
+    };
+
+//console loggy version:
+   // _.reduce = function(collection, iterator, resultOrStatus) {
+   //   _.each(collection, function(nowElement, i) {
+   //    console.log("Collection here is " + collection);
+   //       console.log("resultOrStatus at start of if iteration is " + resultOrStatus);
+   //       if (resultOrStatus !== undefined) {
+   //        console.log("nowElement is " + nowElement + " at index " + i + " and iterator is " + iterator);
+   //            resultOrStatus = iterator(resultOrStatus, nowElement);
+   //            console.log("After running iterator, resultOrStatus is now " + resultOrStatus);
+   //        } else {
+   //            console.log("Since resultOrStatus is undefined at this index " + i);
+   //            console.log("we set first element to be the element or " + collection[i]);
+   //            resultOrStatus = collection[i];
+   //        }
+   //      });
+   //      return resultOrStatus;
+   //  };
+
+
+  // _.each = function(collection, iterator) {
+  //   if (Array.isArray(collection)){
+  //     for (var i = 0; i < collection.length; i++) {
+  //       iterator(collection[i], i, collection);
+  //       }
+  //     } else {
+  //       for (var prop in collection) {
+  //         iterator(collection[prop], prop, collection);
+  //       }
+  //     }
   // };
-  //
-
-   _.reduce = function(collection, iterator, accumulator) {
-   _.each(collection, function(value, i, collection) {
-       if (accumulator !== undefined) { 
-            accumulator = iterator(accumulator, value);
-        } else {
-            accumulator = collection[0];
-        }
-
-      });
-        return accumulator;
- };
-
-
 
   // Determine if the array or object contains a given value (using `===`).
+  // code as given:
+  // _.contains = function(collection, target) {
+  //   // TIP: Many iteration problems can be most easily expressed in
+  //   // terms of reduce(). Here's a freebie to demonstrate!
+  //   return _.reduce(collection, function(wasFound, item) {
+  //     if (wasFound) {
+  //       return true;
+  //     }
+  //     return item === target;
+  //   }, false);
+  // };
+
   _.contains = function(collection, target) {
     // TIP: Many iteration problems can be most easily expressed in
     // terms of reduce(). Here's a freebie to demonstrate!
+   // console.log("---------------------------");
     return _.reduce(collection, function(wasFound, item) {
+     // console.log("wasFound equals here " + wasFound);
       if (wasFound) {
         return true;
       }
-      return item === target;
+      var testy = item === target;
+     // console.log("Here testy equals " + testy);
+    // console.log("end");
+      return testy;
+    
     }, false);
+
   };
 
+    //console loggy version:
+  // _.contains = function(collection, target) {
+  //   // TIP: Many iteration problems can be most easily expressed in
+  //   // terms of reduce(). Here's a freebie to demonstrate!
+  //   console.log("-------------------------------");
+  //   console.log("We are passed this collection " + collection);
+  //   console.log("And we will test to see if it contains " + target);
+  //   var result = _.reduce(collection, function(wasFound, item) {
+  //     console.log("Within reduce, we are passing this to each " + item);
+  //     console.log("This is wasFound before we do anything " + wasFound);
+  //     if (wasFound) {
+  //       return true;
+  //     }
+  //     console.log("testing " + item);
+  //     console.log("against " + target);
+  //     var trying = item === target;
+  //     console.log("Does item equal target? " + trying);
+  //     return item === target;
+  //   }, false);
+  //   console.log("final test of this collection is " + result);
+  //   return result;
+  // };
 
   // Determine whether all of the elements match a truth test.
   _.every = function(collection, iterator) {
+    if (collection == null && collection.length == null) {
+      return true} else if (_.reduce(collection,iterator)) {
+      return true;
+    }
+      return false;
+    
+
+    //if (collection != null && collection.results != null && collection.results.size != 0) {
+      //if (_.reduce(collection, iterator)) {return true}; 
+      //retrun false;}; 
+      //else {return true};
+   
+
+    //if, when i iterate on every item of a colleciton, it passes a truth test, then return true.
+    //if it fails the truth test even once, return false.
+
     // TIP: Try re-using reduce() here.
   };
+
+
+  //Determine whether all of the elements match a truth test.
+  // First shot:
+  // _.every = function(collection, iterator) {
+  //   console.log("We are passed in this " + collection);
+  //   return _.reduce(collection, function(didItPass, item){
+  //     if (didItPass){
+  //       return iterator(item);
+  //     }
+  //   return false;
+  //   }, false);
+  // };
+    // TIP: Try re-using reduce() here.
+
 
   // Determine whether any of the elements pass a truth test. If no iterator is
   // provided, provide a default one
