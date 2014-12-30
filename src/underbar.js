@@ -94,19 +94,29 @@
   };
 
 
-  // Return all elements of an array that don't pass a truth test.
+//   // Return all elements of an array that don't pass a truth test.
+//   _.reject = function(collection, test) {
+//     // TIP: see if you can re-use _.filter() here, without simply
+//     // copying code in and modifying it
+//    var passed = _.filter(collection, test);
+//    var answer = [];
+//    _.each(collection, function(valueWithinCollection) {
+//       if (_.indexOf(passed, valueWithinCollection) === -1) {
+//         answer.push(valueWithinCollection);
+//       }
+//     });
+//    return answer;
+// };
+
   _.reject = function(collection, test) {
     // TIP: see if you can re-use _.filter() here, without simply
     // copying code in and modifying it
-   var passed = _.filter(collection, test);
-   var answer = [];
-   _.each(collection, function(valueWithinCollection) {
-      if (_.indexOf(passed, valueWithinCollection) === -1) {
-        answer.push(valueWithinCollection);
-      }
-    });
-   return answer;
-};
+    var filterResults =  _.filter(collection, function(hiAllen){
+      return !test(hiAllen);
+      });
+    return filterResults;
+    console.log("External filter results " + filterResults);
+  };
 
   // Produce a duplicate-free version of the array.
   _.uniq = function(array) {
@@ -342,6 +352,13 @@
   // Like extend, but doesn't ever overwrite a key that already
   // exists in obj
   _.defaults = function(obj) {
+      for (var i = 0; i < arguments.length; i++) {
+        var source = arguments[i];
+        for (var prop in source) {
+          if (obj[prop] === void 0) {obj[prop] = source[prop]};
+        }
+      }
+      return obj;
   };
 
 
@@ -385,6 +402,14 @@
   // already computed the result for the given argument and return that value
   // instead if possible.
   _.memoize = function(func) {
+    var cache = {};
+    return function () {
+      var args = Array.prototype.slice.call(arguments);
+      if (cache[args] === undefined) {
+        cache[args] = func.apply(this, args);
+      }
+    return cache[args];
+    };
   };
 
   // Delays a function for the given number of milliseconds, and then calls
@@ -394,6 +419,10 @@
   // parameter. For example _.delay(someFunction, 500, 'a', 'b') will
   // call someFunction('a', 'b') after 500ms
   _.delay = function(func, wait) {
+    var args = Array.prototype.slice.call(arguments, 2);
+    return setTimeout(function(){
+      return func.apply(this, args);
+    }, wait);
   };
 
 
@@ -408,6 +437,17 @@
   // input array. For a tip on how to make a copy of an array, see:
   // http://mdn.io/Array.prototype.slice
   _.shuffle = function(array) {
+    var copiedArray = array.slice();
+    var i = copiedArray.length;
+    if ( i == 0 ) return false;
+    while (--i) {
+      var j = Math.floor (Math.random () * (i + 1) ) ;
+      var tempi = copiedArray[i];
+      var tempj = copiedArray[j];
+      copiedArray[i] = tempj;
+      copiedArray[j] = tempi;
+    }
+    return copiedArray;
   };
 
 
