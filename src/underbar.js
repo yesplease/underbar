@@ -64,6 +64,7 @@
       }
   };
 
+
   // Returns the index at which value can be found in the array, or -1 if value
   // is not present in the array.
   _.indexOf = function(array, target){
@@ -71,30 +72,27 @@
     // implemented for you. Instead of using a standard `for` loop, though,
     // it uses the iteration helper `each`, which you will need to write.
     var result = -1;
-
     _.each(array, function(item, index) {
       if (item === target && result === -1) {
         result = index;
       }
     });
-
     return result;
   };
 
   // Return all elements of an array that pass a truth test.
   _.filter = function(collection, test) {
     var resultArray = [];
-    _.each(collection, function(currentElement){
-      if (test(currentElement) === true) {
-       // old: result.push(collection[i]);  
-       resultArray.push(currentElement);
+    _.each(collection, function(value){
+      if (test(value) === true) {
+       resultArray.push(value);
       }
     });
     return resultArray;
   };
 
 
-//   // Return all elements of an array that don't pass a truth test.
+//   This is what I wrote before I got help re-using filter in a cleaner weay.
 //   _.reject = function(collection, test) {
 //     // TIP: see if you can re-use _.filter() here, without simply
 //     // copying code in and modifying it
@@ -115,19 +113,17 @@
       return !test(hiAllen);
       });
     return filterResults;
-    console.log("External filter results " + filterResults);
   };
 
   // Produce a duplicate-free version of the array.
   _.uniq = function(array) {
-    var alone = [];
-    _.each(array, function(currentValue){
-      if (_.indexOf(alone, currentValue) === -1){
-        alone.push(currentValue);
+    var singular = [];
+    _.each(array, function(value){
+      if (_.indexOf(singular, value) === -1){
+        singular.push(value);
       }
-
     });
-    return alone;
+    return singular;
   };
 
   // Return the results of applying an iterator to each element.
@@ -135,11 +131,10 @@
     // map() is a useful primitive iteration function that works a lot
     // like each(), but in addition to running the operation on all
     // the members, it also maintains an array of results.
-
     var results = [];
     if(Array.isArray(collection)){
       for (var i = 0; i < collection.length; i++) {
-        results.push(iterator(collection[i], i, collection));
+        results.push(iterator(collection[i]));
       } 
     } else {
         for (var prop in collection){
@@ -202,99 +197,29 @@
         return resultOrStatus;
     };
 
-//console loggy version:
-   // _.reduce = function(collection, iterator, resultOrStatus) {
-   //   _.each(collection, function(nowElement, i) {
-   //    console.log("Collection here is " + collection);
-   //       console.log("resultOrStatus at start of if iteration is " + resultOrStatus);
-   //       if (resultOrStatus !== undefined) {
-   //        console.log("nowElement is " + nowElement + " at index " + i + " and iterator is " + iterator);
-   //            resultOrStatus = iterator(resultOrStatus, nowElement);
-   //            console.log("After running iterator, resultOrStatus is now " + resultOrStatus);
-   //        } else {
-   //            console.log("Since resultOrStatus is undefined at this index " + i);
-   //            console.log("we set first element to be the element or " + collection[i]);
-   //            resultOrStatus = collection[i];
-   //        }
-   //      });
-   //      return resultOrStatus;
-   //  };
-
-
-
-
-  // Determine if the array or object contains a given value (using `===`).
-  // code as given:
-  // _.contains = function(collection, target) {
-  //   // TIP: Many iteration problems can be most easily expressed in
-  //   // terms of reduce(). Here's a freebie to demonstrate!
-  //   return _.reduce(collection, function(wasFound, item) {
-  //     if (wasFound) {
-  //       return true;
-  //     }
-  //     return item === target;
-  //   }, false);
-  // };
-
   _.contains = function(collection, target) {
     // TIP: Many iteration problems can be most easily expressed in
     // terms of reduce(). Here's a freebie to demonstrate!
    // console.log("---------------------------");
     return _.reduce(collection, function(wasFound, item) {
-     // console.log("wasFound equals here " + wasFound);
-    // console.log("wasfound is a " + typeof wasFound);
       if (wasFound) {
         return true;
       }
       var testy = item === target;
-     // console.log("Here testy equals " + testy);
-    // console.log("end");
       return testy;
-    
     }, false);
-
   };
 
-    //console loggy version:
-  // _.contains = function(collection, target) {
-  //   // TIP: Many iteration problems can be most easily expressed in
-  //   // terms of reduce(). Here's a freebie to demonstrate!
-  //   console.log("-------------------------------");
-  //   console.log("We are passed this collection " + collection);
-  //   console.log("And we will test to see if it contains " + target);
-  //   var result = _.reduce(collection, function(wasFound, item) {
-  //     console.log("Within reduce, we are passing this to each " + item);
-  //     console.log("This is wasFound before we do anything " + wasFound);
-  //     if (wasFound) {
-  //       return true;
-  //     }
-  //     console.log("testing " + item);
-  //     console.log("against " + target);
-  //     var trying = item === target;
-  //     console.log("Does item equal target? " + trying);
-  //     return item === target;
-  //   }, false);
-  //   console.log("final test of this collection is " + result);
-  //   return result;
-  // };
+
 
   // Determine whether all of the elements match a truth test.
   _.every = function(collection, truthyTest){
-    //If the truthy test is not defined, we need to set it -- why does this not say var or function?
     var truthyTest = truthyTest || _.identity;
-
-    //Next, set a boolean variable for whether the test passes or not. Let's assume all tests pass by default. -- could we have set this
-    //in the function definition of _.reduce()?
     var passed = true;
-
-    //Loop through the collection
-    _.each(collection, function(elem){
-      //where does elem come from? from each itself? It pulls something out of the collection itself (as defined in each)?
-      //What if we wanted to pull the index out of the collection?
-
-      if(!truthyTest(elem)){
+    _.each(collection, function(value){
+      if(!truthyTest(value)){
+        //don't set var equals here becuase that defines just a local scope variable
         passed = false;
-      //This part makes sense. If the test ever fails, just set passed to equal false.
       }
     });
     return passed;
@@ -302,15 +227,11 @@
 
 
 
-
-
   // Determine whether any of the elements pass a truth test. If no iterator is
   // provided, provide a default one
   _.some = function(collection, iterator) {
     var iterator = iterator || _.identity;
-
     var passed = false;
-
     _.each(collection, function(elem){
       if (iterator(elem)) {
         passed = true;
@@ -355,7 +276,9 @@
       for (var i = 0; i < arguments.length; i++) {
         var source = arguments[i];
         for (var prop in source) {
-          if (obj[prop] === void 0) {obj[prop] = source[prop]};
+          if (obj[prop] === void 0) {
+            obj[prop] = source[prop]
+          };
         }
       }
       return obj;
